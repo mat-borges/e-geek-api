@@ -1,4 +1,13 @@
+import { usersCollection } from '../db/db.js';
+
 export async function postSignUp(req, res) {
 	const { user } = res.locals;
-	res.status(404).send({ user, message: 'Not fully implemented yet' });
+
+	try {
+		await usersCollection.insertOne(user);
+		res.status(200).send({ message: 'User registered successfully' });
+	} catch (err) {
+		console.log(err);
+		res.sendStatus(500);
+	}
 }

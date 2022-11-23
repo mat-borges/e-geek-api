@@ -5,6 +5,8 @@ export const signUpSchema = Joi.object({
 	email: Joi.string().email().required().label('E-mail'),
 	password: Joi.string().min(8).required().label('Password'),
 	cpf: Joi.string()
+		.min(11)
+		.max(14)
 		.pattern(/[0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2}/, 'CPF')
 		.label('CPF'),
 	birthdate: Joi.date().timestamp('javascript').required().label('Birth Date'),
