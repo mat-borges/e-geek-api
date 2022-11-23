@@ -22,6 +22,7 @@ router.post('/editProduct', async (req, res) => {
 		const errors = error.details.map((detail) => detail.message);
 		return res.status(422).send({ message: errors });
 	}
+
 	try {
 		await productsCollection.insertOne(product);
 		res.status(200).send(product);
