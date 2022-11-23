@@ -6,12 +6,12 @@ const router = Router();
 
 const productSchema = Joi.object({
 	name: Joi.string().required().label('Name'),
-	price: Joi.number().precision(2).required().label('Price'),
+	price: Joi.number().positive().precision(2).required().label('Price'),
 	tags: Joi.array().items(Joi.string().required()).label('tags'),
 	mainimage: Joi.string().uri().required().label('MainImage'),
 	images: Joi.array().items(Joi.string().uri()).label('Images'),
 	description: Joi.string().required().label('Description'),
-	sizes: Joi.array().items(Joi.string().min(1)).label('Sizes'),
+	sizes: Joi.array().items(Joi.string().min(1).valid('PP', 'P', 'M', 'G', 'GG', 'N/A')).label('Sizes'),
 	purchases: Joi.number().integer().required().label('Purchases'),
 });
 

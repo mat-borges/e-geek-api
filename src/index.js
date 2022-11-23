@@ -8,6 +8,7 @@ import manageProductRouter from './routes/manageProductsCollection.js';
 dotenv.config();
 
 const app = express();
+export const cleanStringData = (string) => stripHtml(string).result.trim();
 
 app.use(cors());
 app.use(json());
