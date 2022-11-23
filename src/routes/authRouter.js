@@ -5,3 +5,5 @@ import { validateSignUp } from '../middlewares/singUpValidationMiddleware.js';
 const router = Router();
 
 router.post('/sign-up', validateSignUp, postSignUp);
+
+export default router;

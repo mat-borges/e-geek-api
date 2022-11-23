@@ -1,4 +1,5 @@
 import { cleanStringData } from '../index.js';
+import { signUpSchema } from '../models/signUpSchema.js';
 import { usersCollection } from '../db/db.js';
 
 export async function validateSignUp(req, res, next) {
