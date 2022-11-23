@@ -32,7 +32,7 @@ router.post('/editProduct', async (req, res) => {
 	}
 });
 
-router.put('/editProduct', (req, res) => {
+router.put('/editProduct', async (req, res) => {
 	res.status(404).send('Not implemented yet');
 });
 

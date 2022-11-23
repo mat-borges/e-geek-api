@@ -12,7 +12,8 @@ try {
 	console.log('Erro no mongo.connect', err.message);
 }
 
-export const db = mongoClient.db('myWallet');
+export const db = mongoClient.db('eGeek');
+
 export const usersCollection = db.collection('users');
 export const productsCollection = db.collection('products');
 export const sessionsCollection = db.collection('sessions');
