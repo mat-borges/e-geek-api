@@ -1,9 +1,12 @@
 {
-	"name": "projeto15-e-geek-back",
+	"name": "e-geek-api",
 	"version": "1.0.0",
-	"description": "",
-	"main": "index.js",
+	"type": "module",
+	"description": "API do projeto de e-commerce: e-Geek",
+	"main": "src/index.js",
 	"scripts": {
+		"dev": "npx nodemon src/index.js",
+		"start": "node src/index.js",
 		"test": "echo \"Error: no test specified\" && exit 1"
 	},
 	"repository": {
