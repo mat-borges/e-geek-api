@@ -21,7 +21,7 @@ export async function validateSignUpSchema(req, res, next) {
 		name: cleanStringData(name),
 		email: cleanStringData(email),
 		password,
-		cpf: cleanStringData(formatCpf),
+		cpf: formatCpf,
 		birthdate: dayjs(cleanStringData(birthdate)).valueOf(),
 		adress: cleanStringData(adress),
 	};
@@ -29,6 +29,7 @@ export async function validateSignUpSchema(req, res, next) {
 	const { error } = signUpSchema.validate(user, { abortEarly: false });
 
 	if (error) {
+		console.log(user);
 		const errors = error.details.map((detail) => detail.message);
 		return res.status(422).send({ message: errors });
 	} else {
