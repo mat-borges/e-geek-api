@@ -15,5 +15,5 @@ export const signUpSchema = Joi.object({
 		.label('CPF')
 		.required(),
 	birthdate: Joi.date().timestamp('javascript').label('Birth Date').required(),
-	adress: Joi.string().min(5).label('Adress').required(),
+	address: Joi.string().min(5).label('Address').required(),
 });
