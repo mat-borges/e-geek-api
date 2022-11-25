@@ -1,14 +1,19 @@
 import Joi from 'joi';
 
 export const signUpSchema = Joi.object({
-	name: Joi.string().min(3).required().label('Name'),
-	email: Joi.string().email().required().label('E-mail'),
-	password: Joi.string().min(8).required().label('Password'),
+	name: Joi.string().min(3).label('Name').required(),
+	email: Joi.string().email().label('E-mail').required(),
+	password: Joi.string()
+		.min(8)
+		.pattern(/^([a-zA-Z0-9@*#!.,$%]{8,})$/)
+		.label('Password')
+		.required(),
 	cpf: Joi.string()
 		.min(11)
 		.max(14)
 		.pattern(/[0-9]{3}[\.]?[0-9]{3}[\.]?[0-9]{3}[-]?[0-9]{2}/, 'CPF')
-		.label('CPF'),
-	birthdate: Joi.date().timestamp('javascript').required().label('Birth Date'),
-	adress: Joi.string().min(5).required().label('Adress'),
+		.label('CPF')
+		.required(),
+	birthdate: Joi.date().timestamp('javascript').label('Birth Date').required(),
+	adress: Joi.string().min(5).label('Adress').required(),
 });
