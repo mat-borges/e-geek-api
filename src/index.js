@@ -10,7 +10,8 @@ import { stripHtml } from 'string-strip-html';
 dotenv.config();
 
 const app = express();
-export const cleanStringData = (string) => stripHtml(string).result.trim();
+export const cleanStringData = (string) =>
+	stripHtml(JSON.stringify(string).replace(/"|"/gi, '')).result.trim();
 
 app.use(cors());
 app.use(json());
