@@ -20,6 +20,10 @@ export async function postSignIn(req, res){
 		const token = uuid();
 		const userData = await usersCollection.findOne({email: user.email});
 		const sessionExists = await sessionsCollection.findOne({userId: userData._id});
+		const body = {
+			token: token,
+			name: user.name
+		};
 
 		if(sessionExists){
 			await sessionsCollection.updateOne({
@@ -30,17 +34,18 @@ export async function postSignIn(req, res){
 					token
 				}
 			});
-
 		}else{
 			await sessionsCollection.insertOne({
 				userId: userExists._id,
 				lastStatus: Date.now(),
 				token
 			});
-
 		}
+
+		res.send(body)
 	} catch (err) {
 		console.log(err);
 		res.sendStatus(500);
+		return;
 	}
 }
