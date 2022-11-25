@@ -1,8 +1,7 @@
 import { signInSchema } from "../models/signInSchema.js";
 import bcrypt from 'bcrypt';
 import { cleanStringData } from "../index.js";
-import { v4 as uuid } from 'uuid';
-import { usersCollection, sessionsCollection } from '../db/db.js';
+import { usersCollection } from '../db/db.js';
 
 export async function signInValidation(req, res, next){
     const user = req.body;
@@ -36,4 +35,5 @@ export async function checkUserAndPassword(req, res, next){
         console.log(err);
         res.sendStatus(500);
     }
+    next();
 }
