@@ -5,6 +5,7 @@ import authRouter from './routes/authRouter.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import manageProductRouter from './routes/manageProductsCollectionRouter.js';
+import productsRouter from './routes/productsRouter.js';
 import { stripHtml } from 'string-strip-html';
 
 dotenv.config();
@@ -18,5 +19,6 @@ app.use(json());
 
 app.use(manageProductRouter);
 app.use(authRouter);
+app.use(productsRouter);
 
 app.listen(process.env.PORT, () => console.log(`Running server on http://localhost:${process.env.PORT}`));
