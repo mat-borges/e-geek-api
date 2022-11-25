@@ -6,8 +6,7 @@ import { signUpSchema } from '../models/signUpSchema.js';
 import { usersCollection } from '../db/db.js';
 
 export async function validateSignUpSchema(req, res, next) {
-	const { name, email, password, cpf, birthdate, adress } = req.body;
-
+	const { name, email, password, cpf, birthdate, address } = req.body;
 	dayjs.locale(ptbr);
 
 	const formatCpf = cleanStringData(cpf)
@@ -23,7 +22,7 @@ export async function validateSignUpSchema(req, res, next) {
 		password,
 		cpf: formatCpf,
 		birthdate: dayjs(cleanStringData(birthdate)).valueOf(),
-		adress: cleanStringData(adress),
+		address: cleanStringData(address),
 	};
 	// Validate Schema
 	const { error } = signUpSchema.validate(user, { abortEarly: false });
