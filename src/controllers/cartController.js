@@ -55,3 +55,16 @@ export async function getCartItens(req, res) {
 		return
 	}
 }
+
+export async function deleteCartItem(req, res){
+	const id = req.params.id
+	
+	try{
+		await cartsCollection.deleteOne({_id: ObjectId(id)})
+	} catch (err) {
+		console.log(err);
+		res.sendStatus(500);
+		return
+	}
+	res.send({ message: "ok" });
+}

@@ -1,4 +1,4 @@
-import { cartSchema } from "../models/cartSchema.js";
+import { cartSchema, itemSchema } from "../models/cartSchema.js";
 import { productsCollection, cartsCollection } from "../db/db.js";
 import { cleanStringData } from "../index.js";
 import { ObjectId } from "mongodb";
@@ -17,6 +17,17 @@ export async function cartValidation(req, res, next) {
 		return;
 	} else {
 		res.locals.product = product;
+	}
+	next();
+}
+
+export async function itemCartIdValidation(req, res, next) {
+	const validation = itemSchema.validate(req.params.id, { abortEarly: false });
+
+	if (validation.error) {
+		const errors = validation.error.details.map((detail) => detail.message);
+		res.status(422).send(errors);
+		return;
 	}
 	next();
 }
@@ -63,3 +74,29 @@ export async function checkProductAlreadyAdded(req, res, next) {
 	}
 	next();
 }
+
+
+export async function checkCartItem(req, res, next) {
+	const itemId = req.params.id
+	const { userId, _id} = res.locals
+	let searchFor;
+
+	try {
+		if(userId===null){
+			searchFor = {_id: ObjectId(itemId), sessionId: _id}
+		}else{
+			searchFor = {_id: ObjectId(itemId), userId: userId}
+		}
+		const productExists = await cartsCollection.findOne(searchFor);
+
+		if (!productExists) {
+			res.status(401).send({ message: "Item não encontrado!" });
+			return;
+		}
+	} catch (err) {
+		console.log(err);
+		res.sendStatus(500);
+	}
+	next();
+}
+
