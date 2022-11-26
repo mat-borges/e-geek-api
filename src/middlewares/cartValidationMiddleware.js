@@ -1,4 +1,4 @@
-import { cartSchema, itemSchema } from "../models/cartSchema.js";
+import { cartSchema, itemSchema, itemPutSchema } from "../models/cartSchema.js";
 import { productsCollection, cartsCollection } from "../db/db.js";
 import { cleanStringData } from "../index.js";
 import { ObjectId } from "mongodb";
@@ -10,6 +10,24 @@ export async function cartValidation(req, res, next) {
 	};
 
 	const validation = cartSchema.validate(product, { abortEarly: false });
+
+	if (validation.error) {
+		const errors = validation.error.details.map((detail) => detail.message);
+		res.status(422).send(errors);
+		return;
+	} else {
+		res.locals.product = product;
+	}
+	next();
+}
+
+export async function cartPutValidation(req, res, next) {
+	const product = {
+		itemId: cleanStringData(req.body.itemId),
+		amount: req.body.amount,
+	};
+
+	const validation = itemPutSchema.validate(product, { abortEarly: false });
 
 	if (validation.error) {
 		const errors = validation.error.details.map((detail) => detail.message);
@@ -77,9 +95,13 @@ export async function checkProductAlreadyAdded(req, res, next) {
 
 
 export async function checkCartItem(req, res, next) {
-	const itemId = req.params.id
-	const { userId, _id} = res.locals
+	let itemId = req.params?.id
+	const { userId, _id} = res.locals.session
 	let searchFor;
+
+	if (itemId===undefined){
+		itemId = res.locals.product.itemId
+	}
 
 	try {
 		if(userId===null){

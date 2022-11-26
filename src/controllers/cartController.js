@@ -68,3 +68,22 @@ export async function deleteCartItem(req, res){
 	}
 	res.send({ message: "ok" });
 }
+
+export async function putCartItem(req, res){
+	const { itemId, amount } = res.locals.product
+	
+	try{
+		await cartsCollection.updateOne({
+			_id: ObjectId(itemId)
+		},{
+			$set: {
+				amount: amount
+			}
+		})
+	} catch (err) {
+		console.log(err);
+		res.sendStatus(500);
+		return
+	}
+	res.send({ message: "ok" });
+}
