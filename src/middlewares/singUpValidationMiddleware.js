@@ -6,8 +6,7 @@ import { signUpSchema } from '../models/signUpSchema.js';
 import { usersCollection } from '../db/db.js';
 
 export async function validateSignUpSchema(req, res, next) {
-	const { name, email, password, cpf, birthdate, adress } = req.body;
-
+	const { name, email, password, cpf, birthdate, address } = req.body;
 	dayjs.locale(ptbr);
 
 	const formatCpf = cleanStringData(cpf)
@@ -23,15 +22,16 @@ export async function validateSignUpSchema(req, res, next) {
 		password,
 		cpf: formatCpf,
 		birthdate: dayjs(cleanStringData(birthdate)).valueOf(),
-		adress: cleanStringData(adress),
+		address: cleanStringData(address),
 	};
 	// Validate Schema
 	const { error } = signUpSchema.validate(user, { abortEarly: false });
 
 	if (error) {
-		console.log(user);
-		const errors = error.details.map((detail) => detail.message);
-		return res.status(422).send({ message: errors });
+		const errors = error.details.map(
+			(detail) => new Object({ label: detail.context.label, message: detail.message })
+		);
+		return res.status(422).send({ errors });
 	} else {
 		const hashPassword = bcrypt.hashSync(user.password, 10);
 		res.locals.user = { ...user, password: hashPassword };
