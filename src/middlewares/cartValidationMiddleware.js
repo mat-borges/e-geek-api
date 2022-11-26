@@ -42,14 +42,17 @@ export async function checkProduct(req, res, next) {
 
 export async function checkProductAlreadyAdded(req, res, next) {
 	const { productId } = res.locals.product;
-	const {_id} = res.locals.session;
+	const session = res.locals.session;
+	let searchFor;
 
 	try {
-		const productExists = await cartsCollection.findOne({
-			productId: ObjectId(productId),
-			sessionId: _id
-		});
-
+		if(session.userId===null){
+			searchFor = {productId: ObjectId(productId), sessionId: session._id}
+		}else{
+			searchFor = {productId: ObjectId(productId), userId: session.userId}
+		}
+		const productExists = await cartsCollection.findOne(searchFor);
+		
 		if (productExists) {
 			res.status(401).send({ message: "Produto ja adicionado ao carrinho!" });
 			return;

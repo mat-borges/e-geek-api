@@ -1,4 +1,4 @@
-import { cartsCollection, sessionsCollection } from "../db/db.js";
+import { cartsCollection, sessionsCollection, productsCollection } from "../db/db.js";
 import { ObjectId } from "mongodb";
 
 export async function postCartItem(req, res) {
@@ -13,11 +13,45 @@ export async function postCartItem(req, res) {
 	};
 
 	try {
-		await cartsCollection.insertOne(cartItem);
+		const productDataBase = await productsCollection.findOne(ObjectId(product.productId))
+
+		await cartsCollection.insertOne({
+			...cartItem,
+			name: productDataBase.name,
+			mainimage: productDataBase.mainimage,
+			price: productDataBase.price
+		});
 	} catch (err) {
 		console.log(err);
 		res.sendStatus(500);
 	}
 
 	res.send({ message: "ok" });
+}
+
+export async function getCartItens(req, res) {
+	const session = res.locals.session;
+	let searchFor = {}
+
+	try {
+		if(session.userId===null){
+			searchFor = {sessionId: session._id}
+		}else{
+			searchFor = {userId: session.userId}
+		}
+		
+		let cartList = await cartsCollection.find(searchFor).toArray();
+		cartList.forEach(element=>{
+			delete element.userId
+			delete element.sessionId
+		});
+		
+		res.send(cartList);
+
+		
+	} catch (err) {
+		console.log(err);
+		res.sendStatus(500);
+		return
+	}
 }
