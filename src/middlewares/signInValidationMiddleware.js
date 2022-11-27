@@ -5,9 +5,11 @@ import { usersCollection } from "../db/db.js";
 
 export async function signInValidation(req, res, next) {
 	const user = {
+		...req.body,
 		email: cleanStringData(req.body.email),
 		password: req.body.password,
 	};
+
 
 	const validation = signInSchema.validate(user, { abortEarly: false });
 
