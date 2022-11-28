@@ -122,3 +122,14 @@ export async function getNewSession(req, res) {
 		res.send(500);
 	}
 }
+
+export async function deleteSignOut(req, res) {
+	const { userId } = res.locals.session;
+	try {
+		await sessionsCollection.deleteOne({ userId });
+		res.sendStatus(200);
+	} catch (err) {
+		console.log(err);
+		res.sendStatus(500);
+	}
+}
