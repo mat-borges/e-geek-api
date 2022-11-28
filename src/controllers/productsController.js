@@ -36,3 +36,30 @@ export async function getProductById(req, res) {
 		res.sendStatus(500);
 	}
 }
+
+export async function getSearch(req, res) {
+	const filters = req.query;
+	const tags = filters?.tags?.split(/-|,/);
+	const sizes = filters?.sizes?.split(/-|,/);
+	let limit = parseInt(filters?.limit);
+	let page = parseInt(filters?.page);
+
+	if (!tags && !sizes) {
+		return res.sendStatus(404);
+	}
+
+	try {
+		const products = await productsCollection.find({ tags: { $all: tags } }).toArray();
+
+		if (!page) page = 1;
+		if (!limit) limit = 20;
+		const start = (page, limit) => (page - 1) * limit;
+		const end = (page, limit) => page * limit;
+		const sendProducts = products.slice(start(page, limit), end(page, limit));
+
+		res.send(sendProducts);
+	} catch (err) {
+		console.log(err);
+		res.sendStatus(500);
+	}
+}
