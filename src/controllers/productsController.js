@@ -25,8 +25,9 @@ export async function getProducts(req, res) {
 
 export async function getProductById(req, res) {
 	const { id } = req.params;
-	const findId = new ObjectId(id);
-
+	if (id.length !== 24) {
+		return res.sendStatus(404);
+	}
 	try {
 		const product = await productsCollection.findOne({ _id: new ObjectId(id) });
 		res.send(product);
