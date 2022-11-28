@@ -7,6 +7,7 @@ import dotenv from "dotenv";
 import manageProductRouter from "./routes/manageProductsCollectionRouter.js";
 import productsRouter from "./routes/productsRouter.js";
 import cartRouter from "./routes/cartRouter.js";
+import checkoutRouter from "./routes/checkoutRouter.js";
 import { stripHtml } from "string-strip-html";
 
 dotenv.config();
@@ -22,6 +23,7 @@ app.use(manageProductRouter);
 app.use(authRouter);
 app.use(productsRouter);
 app.use(cartRouter);
+app.use(checkoutRouter);
 
 app.listen(process.env.PORT, () =>
 	console.log(`Running server on http://localhost:${process.env.PORT}`)
