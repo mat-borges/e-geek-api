@@ -1,4 +1,6 @@
 import { cartsCollection } from "../db/db.js";
+import { paymentSchema } from "../models/paymentSchema.js";
+import { cleanStringData } from "../index.js";
 
 export async function userLogged(req, res, next){
     const { userId } = res.locals.session;
@@ -25,4 +27,21 @@ export async function emptyCart(req, res, next){
         res.sendStatus(500)
     }
     next()
+}
+
+export async function paymentValidation(req, res, next) {
+	const paymentMethod = {
+        payment: cleanStringData(req.body.payment)
+    }
+
+	const validation = paymentSchema.validate(paymentMethod, { abortEarly: false });
+
+	if (validation.error) {
+		const errors = validation.error.details.map((detail) => detail.message);
+		res.status(422).send(errors);
+		return;
+	} else {
+		res.locals.payment = paymentMethod;
+	}
+	next();
 }

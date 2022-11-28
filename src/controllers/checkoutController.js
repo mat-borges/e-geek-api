@@ -3,9 +3,10 @@ import { ObjectId } from "mongodb";
 
 export async function sale(req, res){
     const { userId } = res.locals.session;
-    console.log(userId);
+    const paymentMethod = res.locals.payment;
 
     try{
+        let total = 0;
         const cart = await cartsCollection.find({userId: userId}).toArray();
         cart.forEach(element=>{
             delete element._id;
@@ -18,8 +19,14 @@ export async function sale(req, res){
         delete user.password;
         delete user.birthdate;
 
+        for(let i=0; i < cart.length; i++){
+            total += cart[i].amount * cart[i].price;
+        }
+
         const purchase = {
+            ...paymentMethod,
             ...user,
+            total: total,
             userId: userId,
             purchasedate: Date.now(),
             products: cart
