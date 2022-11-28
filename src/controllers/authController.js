@@ -88,7 +88,7 @@ export async function postSignIn(req, res) {
 						})
 					}
 				}
-				
+				await sessionsCollection.deleteOne({token: oldToken})
 				await cartsCollection.deleteMany({sessionId: session._id})
 				await cartsCollection.deleteMany({userId: userData._id})
 				await cartsCollection.insertMany(insertList)
