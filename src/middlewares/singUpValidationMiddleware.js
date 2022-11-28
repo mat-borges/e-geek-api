@@ -5,8 +5,33 @@ import ptbr from 'dayjs/locale/pt-br.js';
 import { signUpSchema } from '../models/signUpSchema.js';
 import { usersCollection } from '../db/db.js';
 
+export function checkUrl(req, res, next) {
+	const image = cleanStringData(req.body?.image);
+	console.log(image);
+	const urlPattern = new RegExp(
+		'^(https?:\\/\\/)?' + // validate protocol
+			'((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // validate domain name
+			'((\\d{1,3}\\.){3}\\d{1,3}))' + // validate OR ip (v4) address
+			'(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // validate port and path
+			'(\\?[;&a-z\\d%_.~+=-]*)?' + // validate query string
+			'(\\#[-a-z\\d_]*)?$',
+		'i'
+	);
+	const checkUrl = urlPattern.test(image);
+
+	if (image.length !== 0 && !checkUrl) {
+		return res.status(422).send({ errors: [{ label: 'Image', message: 'Invalid URL!' }] });
+	} else if (image.length !== 0 && checkUrl) {
+		res.locals.user = { ...req.body, image };
+		return next();
+	} else {
+		res.locals.user = { ...req.body, image: '' };
+		return next();
+	}
+}
+
 export async function validateSignUpSchema(req, res, next) {
-	const { name, email, image, password, cpf, birthdate, address } = req.body;
+	const { name, email, image, password, cpf, birthdate, address } = res.locals.user;
 	dayjs.locale(ptbr);
 
 	const formatCpf = cleanStringData(cpf)

@@ -3,7 +3,7 @@ import Joi from 'joi';
 export const signUpSchema = Joi.object({
 	name: Joi.string().min(3).label('Name').required(),
 	email: Joi.string().email().label('E-mail').required(),
-	image: Joi.string().uri().label('Image'),
+	image: Joi.string().min(0),
 	password: Joi.string()
 		.min(8)
 		.pattern(/^([a-zA-Z0-9@*#!.,$%]{8,})$/)
